@@ -1,0 +1,184 @@
+import { Box, Button, Grid, Stack, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import EditProductDialog from './components/EditProductDialog';
+import { HardwareBar } from './components/HardwareBar';
+import { Item } from './components/Item';
+import { Receipt } from './components/Receipt';
+import { useHardwareStore } from './hardwareStore';
+import { useProductsStore } from './productsStore';
+
+export type CartItem = {
+	itemId: string;
+	quantity: number;
+};
+
+function App() {
+	const products = useProductsStore((state) => state.products);
+	const addProduct = useProductsStore((state) => state.addProduct);
+	const seedProducts = useProductsStore((state) => state.seedProducts);
+	const port = useHardwareStore((state) => state.port);
+	const cardAmount = useHardwareStore((state) => state.cardAmount);
+	const sendEject = useHardwareStore((state) => state.sendEject);
+	const sendSetPrice = useHardwareStore((state) => state.sendSetPrice);
+	const sendWriteAmount = useHardwareStore((state) => state.sendWriteAmount);
+
+	const [editedProductId, setEditedProductId] = useState<string | null>(null);
+
+	const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+	const cartTotal = cartItems.reduce((total, ci) => {
+		const item = products.find((i) => i.id === ci.itemId);
+		if (!item) {
+			return total;
+		}
+		return total + item.price * ci.quantity;
+	}, 0);
+
+	useEffect(() => {
+		sendSetPrice(cartTotal);
+	}, [cartTotal, sendSetPrice]);
+
+	const leftAfterPurchase = cardAmount !== null ? cardAmount - cartTotal : null;
+
+	const getItemCount = (itemId: string) => {
+		const cartItem = cartItems.find((ci) => ci.itemId === itemId);
+		return cartItem ? cartItem.quantity : 0;
+	};
+
+	const changeItemCount = (itemId: string, delta: number) => {
+		setCartItems((currentCartItems) => {
+			const existingItem = currentCartItems.find((ci) => ci.itemId === itemId);
+			if (existingItem) {
+				const newQuantity = existingItem.quantity + delta;
+				if (newQuantity <= 0) {
+					return currentCartItems.filter((ci) => ci.itemId !== itemId);
+				} else {
+					return currentCartItems.map((ci) =>
+						ci.itemId === itemId ? { ...ci, quantity: newQuantity } : ci,
+					);
+				}
+			} else {
+				if (delta <= 0) {
+					return currentCartItems;
+				} else {
+					return [...currentCartItems, { itemId, quantity: delta }];
+				}
+			}
+		});
+	};
+
+	const addItemToCart = (itemId: string) => {
+		changeItemCount(itemId, 1);
+	};
+
+	const removeItemFromCart = (itemId: string) => {
+		changeItemCount(itemId, -1);
+	};
+
+	const cancel = () => {
+		setCartItems([]);
+		sendEject();
+	};
+
+	const pay = () => {
+		if (!leftAfterPurchase || leftAfterPurchase < 0) {
+			return;
+		}
+
+		sendWriteAmount(leftAfterPurchase);
+		setCartItems([]);
+	};
+
+	return (
+		<>
+			<Stack
+				sx={{
+					height: '100vh',
+				}}
+			>
+				<HardwareBar />
+
+				<Grid
+					container
+					direction="row"
+					sx={{
+						padding: 2,
+						flex: 1,
+					}}
+					spacing={6}
+				>
+					<Grid size={6}>
+						<Stack spacing={2}>
+							{Object.values(products).map((product) => (
+								<Item
+									key={product.id}
+									product={product}
+									count={getItemCount(product.id)}
+									onAdd={() => addItemToCart(product.id)}
+									onRemove={() => removeItemFromCart(product.id)}
+									onEdit={() => setEditedProductId(product.id)}
+								/>
+							))}
+
+							{Object.values(products).length === 0 ? (
+								<Stack alignItems="center" spacing={2}>
+									<Typography variant="h5">Inga produkter</Typography>
+									<Button variant="contained" onClick={seedProducts}>
+										Skapa standardprodukter
+									</Button>
+								</Stack>
+							) : (
+								<Button variant="contained" onClick={addProduct}>
+									Lägg till produkt
+								</Button>
+							)}
+						</Stack>
+					</Grid>
+					<Grid size={6}>
+						<Stack sx={{ height: '100%' }}>
+							<Box flex={1}>
+								<Receipt
+									cartItems={cartItems}
+									products={products}
+									total={cartTotal}
+									leftAfterPurchase={leftAfterPurchase}
+								/>
+							</Box>
+
+							<Stack
+								direction="row"
+								spacing={2}
+								justifyContent="flex-end"
+								mt={2}
+							>
+								<Button size="large" onClick={cancel}>
+									Avbryt
+								</Button>
+								<Button
+									size="large"
+									variant="contained"
+									disabled={
+										!port ||
+										cartTotal <= 0 ||
+										cardAmount === null ||
+										cardAmount < cartTotal
+									}
+									onClick={pay}
+								>
+									Betala
+								</Button>
+							</Stack>
+						</Stack>
+					</Grid>
+				</Grid>
+			</Stack>
+
+			<EditProductDialog
+				productId={editedProductId}
+				onClose={() => setEditedProductId(null)}
+			/>
+		</>
+	);
+}
+
+export default App;
