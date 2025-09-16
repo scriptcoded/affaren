@@ -73,7 +73,6 @@ export default function EditProductDialog({ productId, onClose }: Props) {
 						<TextField
 							id={`${formId}-name`}
 							name="name"
-							autoFocus
 							required
 							margin="dense"
 							label="Namn"

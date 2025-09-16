@@ -104,10 +104,11 @@ function App() {
 					sx={{
 						padding: 2,
 						flex: 1,
+						minHeight: 0,
 					}}
 					spacing={6}
 				>
-					<Grid size={6}>
+					<Grid size={6} sx={{ height: '100%', overflowY: 'auto' }}>
 						<Stack spacing={2}>
 							{Object.values(products).map((product) => (
 								<Item
@@ -134,7 +135,7 @@ function App() {
 							)}
 						</Stack>
 					</Grid>
-					<Grid size={6}>
+					<Grid size={6} sx={{ height: '100%', overflowY: 'auto' }}>
 						<Stack sx={{ height: '100%' }}>
 							<Box flex={1}>
 								<Receipt
