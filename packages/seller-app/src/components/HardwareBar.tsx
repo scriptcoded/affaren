@@ -33,11 +33,13 @@ export function HardwareBar() {
 		>
 			<Button
 				onClick={toggleFullscreen}
-				sx={{
+				sx={(theme) => ({
 					position: 'absolute',
 					left: 16,
-					color: 'white',
-				}}
+					color: !port
+						? theme.palette.error.contrastText
+						: theme.palette.text.secondary,
+				})}
 			>
 				Fullskärm
 			</Button>
