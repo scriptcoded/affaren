@@ -19,12 +19,10 @@ export function Receipt({
 	const cardAmount = useHardwareStore((state) => state.cardAmount);
 
 	return (
-		<Box>
-			<Typography variant="h6" gutterBottom>
-				Kvitto
-			</Typography>
+		<Stack style={{ height: '100%' }} spacing={2}>
+			<Typography variant="h6">Kvitto</Typography>
 
-			<Stack spacing={1}>
+			<Stack spacing={1} flex={1}>
 				{cartItems.map((ci) => {
 					const item = products.find((i) => i.id === ci.itemId);
 
@@ -67,6 +65,6 @@ export function Receipt({
 					</span>
 				</Typography>
 			</Box>
-		</Box>
+		</Stack>
 	);
 }
