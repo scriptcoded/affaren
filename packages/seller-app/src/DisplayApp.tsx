@@ -13,7 +13,7 @@ import { useFetchState } from './syncState';
 import { getDiscountPercentage, getSalesPercentage } from './utils';
 
 export function DisplayApp() {
-	const products = useFetchState(5 * 1000);
+	const products = useFetchState(2 * 1000);
 
 	const sellableProducts = products.filter((p) => p.price > 0);
 	const buyableProducts = products.filter((p) => p.price <= 0);
