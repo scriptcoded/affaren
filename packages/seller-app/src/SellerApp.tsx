@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import EditProductDialog from './components/EditProductDialog';
 import { HardwareBar } from './components/HardwareBar';
