@@ -12,19 +12,17 @@ export default async (req: Request, context: Context) => {
 		return new Response(null, { status: 204, headers: CORS_HEADERS });
 	}
 
-	if (req.method !== 'POST') {
+	if (req.method !== 'GET') {
 		return new Response('Method Not Allowed', {
 			status: 405,
 			headers: CORS_HEADERS,
 		});
 	}
 
-	const data = await req.json();
-
 	const store = getStore('state');
-	const entry = await store.setJSON('data', data);
+	const entry = await store.get('data');
 
-	return new Response(JSON.stringify(entry), {
+	return new Response(entry, {
 		status: 200,
 		headers: {
 			...CORS_HEADERS,
