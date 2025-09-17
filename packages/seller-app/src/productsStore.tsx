@@ -14,6 +14,7 @@ const sampleProducts: Product[] = [
 	{ id: '8', name: '2 pinnar', originalPrice: 10, price: 10 },
 	{ id: '9', name: '2 meter surrgarn', originalPrice: 20, price: 20 },
 	{ id: '10', name: 'Sax', originalPrice: 20, price: 20 },
+	{ id: '99', name: 'Knoprep', originalPrice: 5, price: 5 },
 
 	{ id: '11', name: 'Råbandsknop', originalPrice: -10, price: -10 },
 	{ id: '12', name: 'Dubbelt halvslag', originalPrice: -30, price: -30 },
