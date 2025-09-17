@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Divider, Grid, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import EditProductDialog from './components/EditProductDialog';
 import { HardwareBar } from './components/HardwareBar';
@@ -6,13 +6,14 @@ import { Item } from './components/Item';
 import { Receipt } from './components/Receipt';
 import { useHardwareStore } from './hardwareStore';
 import { useProductsStore } from './productsStore';
+import { useStateSync } from './syncState';
 
 export type CartItem = {
 	itemId: string;
 	quantity: number;
 };
 
-function App() {
+export function SellerApp() {
 	const products = useProductsStore((state) => state.products);
 	const addProduct = useProductsStore((state) => state.addProduct);
 	const seedProducts = useProductsStore((state) => state.seedProducts);
@@ -22,9 +23,14 @@ function App() {
 	const sendSetPrice = useHardwareStore((state) => state.sendSetPrice);
 	const sendWriteAmount = useHardwareStore((state) => state.sendWriteAmount);
 
+	const sellableProducts = products.filter((p) => p.price > 0);
+	const buyableProducts = products.filter((p) => p.price <= 0);
+
 	const [editedProductId, setEditedProductId] = useState<string | null>(null);
 
 	const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+	useStateSync(products);
 
 	const cartTotal = cartItems.reduce((total, ci) => {
 		const item = products.find((i) => i.id === ci.itemId);
@@ -109,8 +115,12 @@ function App() {
 					spacing={6}
 				>
 					<Grid size={6} sx={{ height: '100%', overflowY: 'auto' }}>
+						<Typography variant="h5" gutterBottom textAlign="center">
+							Till försäljning
+						</Typography>
+
 						<Stack spacing={2}>
-							{Object.values(products).map((product) => (
+							{sellableProducts.map((product) => (
 								<Item
 									key={product.id}
 									product={product}
@@ -121,9 +131,23 @@ function App() {
 								/>
 							))}
 
-							{Object.values(products).length === 0 ? (
+							<Typography variant="h5" gutterBottom textAlign="center">
+								Att sälja
+							</Typography>
+
+							{buyableProducts.map((product) => (
+								<Item
+									key={product.id}
+									product={product}
+									count={getItemCount(product.id)}
+									onAdd={() => addItemToCart(product.id)}
+									onRemove={() => removeItemFromCart(product.id)}
+									onEdit={() => setEditedProductId(product.id)}
+								/>
+							))}
+
+							{products.length === 0 ? (
 								<Stack alignItems="center" spacing={2}>
-									<Typography variant="h5">Inga produkter</Typography>
 									<Button variant="contained" onClick={seedProducts}>
 										Skapa standardprodukter
 									</Button>
@@ -181,5 +205,3 @@ function App() {
 		</>
 	);
 }
-
-export default App;

@@ -1,5 +1,5 @@
 import { Box, Stack, Typography } from '@mui/material';
-import type { CartItem } from '../App';
+import type { CartItem } from '../SellerApp';
 import type { Product } from '../productsStore';
 import { useHardwareStore } from '../hardwareStore';
 

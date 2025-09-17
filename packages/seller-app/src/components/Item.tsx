@@ -10,7 +10,7 @@ import {
 	Typography,
 } from '@mui/material';
 import type { Product } from '../productsStore';
-import { getDiscountPercentage } from '../utils';
+import { getDiscountPercentage, getSalesPercentage } from '../utils';
 import { useHardwareStore } from '../hardwareStore';
 
 export type Props = {
@@ -64,36 +64,43 @@ export function Item({ product, count, onAdd, onRemove, onEdit }: Props) {
 										marginRight: 8,
 									}}
 								>
-									{getDiscountPercentage(product.originalPrice, product.price)}
+									{product.originalPrice > 0
+										? getDiscountPercentage(
+												product.originalPrice,
+												product.price,
+											)
+										: getSalesPercentage(product.originalPrice, product.price)}
 								</span>
 							</>
 						)}
 					</Typography>
 				</Box>
-				<Stack direction="row">
-					<IconButton disabled={cardAmount == null} onClick={onRemove}>
-						<RemoveIcon />
-					</IconButton>
-					<TextField
-						variant="outlined"
-						size="small"
-						disabled
-						sx={{
-							width: 64,
-						}}
-						slotProps={{
-							htmlInput: {
-								sx: {
-									textAlign: 'center',
+				{product.price > 0 && (
+					<Stack direction="row">
+						<IconButton disabled={cardAmount == null} onClick={onRemove}>
+							<RemoveIcon />
+						</IconButton>
+						<TextField
+							variant="outlined"
+							size="small"
+							disabled
+							sx={{
+								width: 64,
+							}}
+							slotProps={{
+								htmlInput: {
+									sx: {
+										textAlign: 'center',
+									},
 								},
-							},
-						}}
-						value={count ?? 0}
-					/>
-					<IconButton disabled={cardAmount == null} onClick={onAdd}>
-						<AddIcon />
-					</IconButton>
-				</Stack>
+							}}
+							value={count ?? 0}
+						/>
+						<IconButton disabled={cardAmount == null} onClick={onAdd}>
+							<AddIcon />
+						</IconButton>
+					</Stack>
+				)}
 			</Stack>
 		</Paper>
 	);

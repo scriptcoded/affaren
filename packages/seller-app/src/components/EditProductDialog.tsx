@@ -44,6 +44,7 @@ export default function EditProductDialog({ productId, onClose }: Props) {
 		updateProduct({
 			id: productId,
 			name: formJson.name,
+			originalPrice: Number.parseInt(formJson.originalPrice, 10),
 			price: Number.parseInt(formJson.price, 10),
 		});
 
@@ -99,9 +100,6 @@ export default function EditProductDialog({ productId, onClose }: Props) {
 											<InputAdornment position="end">kr</InputAdornment>
 										),
 									},
-									htmlInput: {
-										min: 0,
-									},
 								}}
 							/>
 
@@ -120,9 +118,6 @@ export default function EditProductDialog({ productId, onClose }: Props) {
 										endAdornment: (
 											<InputAdornment position="end">kr</InputAdornment>
 										),
-									},
-									htmlInput: {
-										min: 0,
 									},
 								}}
 							/>

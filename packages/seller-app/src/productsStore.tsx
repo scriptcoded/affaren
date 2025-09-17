@@ -14,6 +14,68 @@ const sampleProducts: Product[] = [
 	{ id: '8', name: '2 pinnar', originalPrice: 10, price: 10 },
 	{ id: '9', name: '2 meter surrgarn', originalPrice: 20, price: 20 },
 	{ id: '10', name: 'Sax', originalPrice: 20, price: 20 },
+
+	{ id: '11', name: 'Råbandsknop', originalPrice: -10, price: -10 },
+	{ id: '12', name: 'Dubbelt halvslag', originalPrice: -30, price: -30 },
+	{ id: '13', name: 'Timmerstek', originalPrice: -30, price: -30 },
+	{
+		id: '14',
+		name: 'Råbandsknop på spagetti',
+		originalPrice: -150,
+		price: -150,
+	},
+	{
+		id: '15',
+		name: 'Något som är exakt 47cm långt',
+		originalPrice: -50,
+		price: -50,
+	},
+	{
+		id: '16',
+		name: 'En dikt som innehåller ert patrullnamn',
+		originalPrice: -75,
+		price: -75,
+	},
+	{
+		id: '17',
+		name: 'Korrekt vinkelsurrning',
+		originalPrice: -100,
+		price: -100,
+	},
+	{
+		id: '18',
+		name: 'Något som är grått och rektangulärt',
+		originalPrice: -20,
+		price: -20,
+	},
+	{
+		id: '19',
+		name: 'Tänd tändsticka som brinner i minst 7 sekunder',
+		originalPrice: -20,
+		price: -20,
+	},
+	{ id: '20', name: 'Tändsticka', originalPrice: -10, price: -10 },
+	{ id: '21', name: 'Häst', originalPrice: -30, price: -30 },
+	{ id: '22', name: '10 armhävningar i rad', originalPrice: -10, price: -10 },
+	{
+		id: '23',
+		name: 'En fläta som är minst 20 cm',
+		originalPrice: -20,
+		price: -20,
+	},
+	{
+		id: '24',
+		name: 'Korrekt utförd uppställningsutmaning',
+		originalPrice: -40,
+		price: -40,
+	},
+	{
+		id: '25',
+		name: 'Korrekt svar på frågepapper (per svar)',
+		originalPrice: -10,
+		price: -10,
+	},
+	{ id: '26', name: 'Löst chiffer', originalPrice: -50, price: -50 },
 ];
 
 export type Product = {
